@@ -3,11 +3,21 @@ const app = express();
 app.use(express.json());
 const path = require('path');
 
+const db = require('./db');
+
+
+
 app.use(require('express-session')({
   secret: process.env.SECRET
 }));
+
+
 const port = process.env.PORT || 3000;
-app.listen(port, ()=> console.log(`listening on port ${port}`));
+
+db.syncAndSeed()
+.then(() => {
+app.listen(port, ()=> console.log(`listening on port ${port}`))
+});
 /*
 const users = {
   moe: {
@@ -49,3 +59,5 @@ app.delete('/api/sessions', (req, res, next)=> {
 app.get('/', (req, res, next)=> {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
+
+
