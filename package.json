@@ -20,7 +20,9 @@
   "homepage": "https://github.com/robcodehub/acme-login#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "express-session": "^1.17.0"
+    "express-session": "^1.17.0",
+    "pg": "^7.12.1",
+    "sequelize": "^5.21.1"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
