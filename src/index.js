@@ -20,9 +20,9 @@ const store = createStore(
 );
 
 const actions = {};
-actions.attemptLogin = (username, history)=> {
+actions.attemptLogin = (credentials, history)=> {
   return async(dispatch)=> {
-    const auth = (await axios.post('/api/sessions', { username })).data;
+    const auth = (await axios.post('/api/sessions', credentials)).data;
     dispatch({ type: 'SET_AUTH', auth});
     history.push('/');
   };
@@ -44,13 +44,44 @@ actions.logout = ()=> {
 
 /* Login */
 class _Login extends Component{
+  constructor(){
+    super();
+    this.state = {
+      email: '',
+      password: '',
+      error: ''
+    };
+    this.onChange = this.onChange.bind(this);
+    this.attemptLogin = this.attemptLogin.bind(this);
+  }
+  attemptLogin(ev){
+    ev.preventDefault();
+    const credentials = {...this.state};
+    delete credentials.error;
+    this.props.attemptLogin(credentials)
+      .catch(ex => this.setState({ error: 'bad credentials'}));
+  }
+  onChange(ev){
+    this.setState({[ev.target.name]: ev.target.value });
+  }
   render(){
-    const { attemptLogin } = this.props;
+    const { error, email, password } = this.state;
+    const { onChange, attemptLogin } = this;
     return (
-        <div>
-          <button onClick={ ()=> attemptLogin('moe')}>Login As Moe</button>
-          <button onClick={ ()=> attemptLogin('lucy')}>Login As Lucy</button>
-        </div>
+        <form>
+          {
+            error && <div className='error'>{ error }</div>
+          }
+          <div>
+            <label>Email</label>
+            <input name='email' value={ email } onChange={ onChange } />
+          </div>
+          <div>
+            <label>Password</label>
+            <input type='password' name='password' value={ password } onChange={ onChange } />
+          </div>
+          <button onClick={ attemptLogin }>Login</button>
+        </form>
     );
   }
 }
@@ -71,7 +102,7 @@ const Login = connect(
 
 /* Home */
 const _Home = ({ auth, logout })=> <div>
-  Home - Welcome { auth.name }
+  Home - Welcome { auth.email }
   <button onClick={ logout }>Logout</button>
 </div>;
 
@@ -96,6 +127,7 @@ class _App extends Component{
     const { loggedIn } = this.props;
     return (
       <div>
+        <h1>Acme Login</h1>
         <HashRouter>
           <Switch>
           {

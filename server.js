@@ -2,45 +2,37 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 const path = require('path');
-
 const db = require('./db');
+const { User } = db.models;
 
 
 
 app.use(require('express-session')({
-  secret: process.env.SECRET
+  secret: process.env.SECRET || "SECRETCODE"
 }));
 
-
 const port = process.env.PORT || 3000;
-
 db.syncAndSeed()
-.then(() => {
-app.listen(port, ()=> console.log(`listening on port ${port}`))
-});
-/*
-const users = {
-  moe: {
-    id: 1,
-    name: 'moe',
-    favoriteWord: 'foo'
-  },
-  lucy: {
-    id: 2,
-    name: 'lucy',
-    favoriteWord: 'bar'
-  }
-};
-*/
+  .then(()=> app.listen(port, ()=> console.log(`listening on port ${port}`)));
+
+
 app.use('/dist', express.static(path.join(__dirname, 'dist')));
 
 app.post('/api/sessions', (req, res, next)=> {
-  const user = users[req.body.username];
-  if(user){
+  User.findOne({
+    where: {
+      email: req.body.email,
+      password: req.body.password
+    }
+  })
+  .then( user => {
+    if(!user){
+      throw ({ status: 401 });
+    }
     req.session.user = user;
     return res.send(user);
-  }
-  next({ status: 401 });
+  })
+  .catch( err => next(err));
 });
 
 app.get('/api/sessions', (req, res, next)=> {
@@ -59,5 +51,4 @@ app.delete('/api/sessions', (req, res, next)=> {
 app.get('/', (req, res, next)=> {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
-
 

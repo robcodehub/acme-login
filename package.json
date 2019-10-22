@@ -1,38 +1,40 @@
 {
-  "name": "acme-login",
+  "name": "cookies-sessions-tokens",
   "version": "1.0.0",
-  "description": "acme login and cookies",
+  "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/robcodehub/acme-login.git"
+    "start": "node server.js",
+    "start:dev": "npm run webpack & SECRET=FOO nodemon server.js --ignore dist/ --ignore src/",
+    "webpack": "webpack --mode=development --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/robcodehub/acme-login/issues"
-  },
-  "homepage": "https://github.com/robcodehub/acme-login#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "express-session": "^1.17.0",
+    "express-session": "^1.16.2",
     "pg": "^7.12.1",
-    "sequelize": "^5.21.1"
+    "sequelize": "^5.19.1"
+  },
+  "babel": {
+    "presets": [
+      "@babel/react"
+    ]
   },
   "devDependencies": {
-    "@babel/core": "^7.6.4",
-    "@babel/preset-react": "^7.6.3",
+    "@babel/core": "^7.6.2",
+    "@babel/preset-react": "^7.0.0",
     "axios": "^0.19.0",
     "babel-loader": "^8.0.6",
-    "react": "^16.10.2",
-    "react-dom": "^16.10.2",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
     "react-redux": "^7.1.1",
-    "react-router-dom": "^5.1.2",
-    "redux": "^4.0.4"
+    "react-router-dom": "^5.1.1",
+    "redux": "^4.0.4",
+    "redux-thunk": "^2.3.0",
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.9"
   }
 }
