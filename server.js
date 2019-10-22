@@ -8,7 +8,7 @@ app.use(require('express-session')({
 }));
 const port = process.env.PORT || 3000;
 app.listen(port, ()=> console.log(`listening on port ${port}`));
-
+/*
 const users = {
   moe: {
     id: 1,
@@ -21,7 +21,7 @@ const users = {
     favoriteWord: 'bar'
   }
 };
-
+*/
 app.use('/dist', express.static(path.join(__dirname, 'dist')));
 
 app.post('/api/sessions', (req, res, next)=> {
